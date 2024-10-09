@@ -18,7 +18,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Link,
   matchPath,
@@ -29,6 +29,7 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import useViewportSizes from "use-viewport-sizes";
+import { UserContext } from "../../App"; // Add UserContext import
 import Logo from "../../Assets/workflow.png";
 import ModeSwitch from "../../Components/Buttons/ModeSwitch/ModeSwitch";
 import SignOutBtn from "../../Components/Buttons/SignOutBtn/SignOutBtn";
@@ -81,9 +82,12 @@ const useStyles = makeStyles((theme) => ({
 function ControlPanel({ window }) {
   const [vpWidth] = useViewportSizes();
   const { path, url } = useRouteMatch();
-  const location = useLocation(); // Get location using useLocation hook
+  const location = useLocation();
   const history = useHistory();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useContext(UserContext); // Use the UserContext to handle user login state
+
+  console.log("UserContext in ControlPanel:", loggedInUser);
 
   const classes = useStyles();
   const theme = useTheme();
@@ -99,8 +103,9 @@ function ControlPanel({ window }) {
   };
 
   const logOut = () => {
-    sessionStorage.clear();
-    history.push("/");
+    sessionStorage.removeItem("user");
+    setLoggedInUser({});
+    history.push("/login");
   };
 
   const navList = [
@@ -166,7 +171,6 @@ function ControlPanel({ window }) {
                       size="1x"
                       className={styles.plusIcon}
                     />
-
                     <span className={styles.navText}>{item.name}</span>
                   </Link>
                 </li>
@@ -236,36 +240,23 @@ function ControlPanel({ window }) {
       <main className={classes.content}>
         <div className={styles.main}>
           <Switch>
-            <Route path={`${path}/dashboard`}>
-              <Dashboard />
-            </Route>
-            <Route path={`${path}/assistant-dashboard`}>
-              <AssistantDashboard />
-            </Route>
-            <Route path={`${path}/Staff`}>
-              <Staff />
-            </Route>
-            <Route path={`${path}/alerts`}>
-              <Alerts />
-            </Route>
-            <Route path={`${path}/sequence`}>
-              <Sequence />
-            </Route>
-            <Route path={`${path}/patients`} exact>
-              <Patients />
-            </Route>
-            <Route path={`${path}/patients/:date`} exact>
-              <PatientInfo />
-            </Route>
-            <Route path={`${path}/doctors`}>
-              <Doctors />
-            </Route>
-            <Route path={`${path}/self-sequence`}>
-              <DoctorsSelf />
-            </Route>
-            <Route path={`${path}/reports`}>
-              <Reports />
-            </Route>
+            <Route path={`${path}/dashboard`} component={Dashboard} />
+            <Route
+              path={`${path}/assistant-dashboard`}
+              component={AssistantDashboard}
+            />
+            <Route path={`${path}/Staff`} component={Staff} />
+            <Route path={`${path}/alerts`} component={Alerts} />
+            <Route path={`${path}/sequence`} component={Sequence} />
+            <Route path={`${path}/patients`} exact component={Patients} />
+            <Route
+              path={`${path}/patients/:date`}
+              exact
+              component={PatientInfo}
+            />
+            <Route path={`${path}/doctors`} component={Doctors} />
+            <Route path={`${path}/self-sequence`} component={DoctorsSelf} />
+            <Route path={`${path}/reports`} component={Reports} />
           </Switch>
         </div>
       </main>

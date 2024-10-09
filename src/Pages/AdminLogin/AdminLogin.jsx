@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import { faArrowAltCircleLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -31,7 +30,7 @@ const AdminLogin = () => {
   }, [auth.provider, history]);
 
   const pageRedirect = () => {
-    history.push(`${auth.address}`);
+    history.push(auth.address || "/admin");
   };
 
   const onSubmit = async (data) => {
@@ -46,8 +45,9 @@ const AdminLogin = () => {
         adminDoc.data().password === data.password
       ) {
         toast.success("Sign In Successful!");
-        window.sessionStorage.setItem("user", adminDoc.data().email);
-        pageRedirect();
+        sessionStorage.setItem("user", adminDoc.data().email); // Set user in sessionStorage
+        setLoggedInUser({ email: adminDoc.data().email }); // Update UserContext
+        pageRedirect(); // Redirect to the dashboard
       } else {
         toast.error("Error: Not registered!");
       }
@@ -60,8 +60,9 @@ const AdminLogin = () => {
       } else {
         toast.success("Successful");
         res.forEach((doc) => {
-          window.sessionStorage.setItem("user", doc.data().email);
-          pageRedirect();
+          sessionStorage.setItem("user", doc.data().email); // Set user in sessionStorage
+          setLoggedInUser({ email: doc.data().email }); // Update UserContext
+          pageRedirect(); // Redirect to the dashboard
         });
       }
     }

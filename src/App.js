@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Toaster } from "react-hot-toast";
 import PatientsInformationProvider from "./context/PatientsInformationContext";
@@ -35,7 +35,13 @@ const App = () => {
     { modal: "" },
   ]);
 
-  // Create a combined context provider for better organization and readability
+  useEffect(() => {
+    const sessionUser = sessionStorage.getItem("user");
+    if (sessionUser) {
+      setLoggedInUser({ email: sessionUser }); // Populate UserContext from sessionStorage
+    }
+  }, []);
+
   const CombinedContextProvider = ({ children }) => (
     <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>
       <ApiContext.Provider value={[header, setHeader]}>
