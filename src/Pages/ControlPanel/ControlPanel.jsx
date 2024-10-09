@@ -39,7 +39,7 @@ import Doctors from "../../Menus/SideMenus/Doctors";
 import Patients from "../../Menus/SideMenus/Patients";
 import Reports from "../../Menus/SideMenus/Reports";
 import Sequence from "../../Menus/SideMenus/Sequence";
-import Stuff from "../../Menus/SideMenus/Stuff";
+import Staff from "../../Menus/SideMenus/Staff";
 import DoctorsSelf from "../../Menus/TabMenus/DoctorsSelf";
 import PatientInfo from "../PatientsInfo/PatientInfo";
 import styles from "./ControlPanel.module.css";
@@ -121,7 +121,7 @@ function ControlPanel({ window }) {
     },
     {
       name: "Roles",
-      url: `${url}/stuff/doctors`,
+      url: `${url}/Staff/doctors`,
       icon: faStethoscope,
     },
     {
@@ -242,8 +242,8 @@ function ControlPanel({ window }) {
             <Route path={`${path}/assistant-dashboard`}>
               <AssistantDashboard />
             </Route>
-            <Route path={`${path}/stuff`}>
-              <Stuff />
+            <Route path={`${path}/Staff`}>
+              <Staff />
             </Route>
             <Route path={`${path}/alerts`}>
               <Alerts />

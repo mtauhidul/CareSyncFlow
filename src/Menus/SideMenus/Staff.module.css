@@ -1,0 +1,69 @@
+.tabLinks {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+}
+
+.tabLinks li {
+  margin-right: 20px; /* Adds spacing between the tabs */
+}
+
+.tabLinks li a {
+  color: var(--color4);
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 5px;
+}
+
+.tabLinks li a:hover,
+.tabLinks li a:focus,
+.tabLinks li a:active {
+  color: var(--color1);
+  border-color: var(--color1);
+  transition: 0.3s;
+}
+
+.button_wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.Staff_container {
+  padding: 30px;
+  margin-top: -45px;
+}
+
+.Staff_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 767px) {
+  .Staff_container {
+    padding: 0 !important;
+  }
+
+  .Staff_wrapper {
+    margin-top: 50px !important;
+    justify-content: center;
+  }
+
+  .button_wrapper {
+    justify-content: center !important;
+  }
+
+  .tabLinks {
+    justify-content: center;
+  }
+
+  .tabLinks li {
+    margin-right: 10px;
+  }
+}
