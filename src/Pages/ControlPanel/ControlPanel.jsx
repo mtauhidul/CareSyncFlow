@@ -1,3 +1,8 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable no-restricted-globals */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable react/require-default-props */
+/* eslint-disable import/no-cycle */
 import {
   faBell,
   faChartBar,
@@ -18,18 +23,16 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Link,
-  matchPath,
   Route,
   Switch,
+  matchPath,
   useHistory,
-  useLocation,
   useRouteMatch,
 } from "react-router-dom";
 import useViewportSizes from "use-viewport-sizes";
-import { UserContext } from "../../App"; // Add UserContext import
 import Logo from "../../Assets/workflow.png";
 import ModeSwitch from "../../Components/Buttons/ModeSwitch/ModeSwitch";
 import SignOutBtn from "../../Components/Buttons/SignOutBtn/SignOutBtn";
@@ -40,7 +43,7 @@ import Doctors from "../../Menus/SideMenus/Doctors";
 import Patients from "../../Menus/SideMenus/Patients";
 import Reports from "../../Menus/SideMenus/Reports";
 import Sequence from "../../Menus/SideMenus/Sequence";
-import Staff from "../../Menus/SideMenus/Staff";
+import Stuff from "../../Menus/SideMenus/Stuff";
 import DoctorsSelf from "../../Menus/TabMenus/DoctorsSelf";
 import PatientInfo from "../PatientsInfo/PatientInfo";
 import styles from "./ControlPanel.module.css";
@@ -57,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
       flexShrink: 0,
     },
   },
+
   appBar: {
     [theme.breakpoints.up("sm")]: {
       width: `calc(100% - ${drawerWidth}px)`,
@@ -69,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
@@ -79,18 +84,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ControlPanel({ window }) {
-  const [vpWidth] = useViewportSizes();
+function ControlPanel(props) {
+  const [vpWidth, vpHeight] = useViewportSizes();
   const { path, url } = useRouteMatch();
-  const location = useLocation();
   const history = useHistory();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useContext(UserContext); // Use the UserContext to handle user login state
 
-  console.log("UserContext in ControlPanel:", loggedInUser);
+  const [drList, setDrList] = useState([]);
 
+  const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -103,41 +107,79 @@ function ControlPanel({ window }) {
   };
 
   const logOut = () => {
-    sessionStorage.removeItem("user");
-    setLoggedInUser({});
-    history.push("/login");
+    sessionStorage.clear();
+    history.push("/");
+    // location.reload();
   };
 
   const navList = [
     {
       name: "Dashboard",
       url: `${url}/dashboard`,
-      icon: faColumns,
+      Icon: (
+        <FontAwesomeIcon
+          icon={faColumns}
+          size="2x"
+          className={`${url}/dashboard` ? styles.activeIcon : styles.plusIcon}
+        />
+      ),
     },
     {
       name: "Patients",
       url: `${url}/patients`,
-      icon: faFileMedical,
+      Icon: (
+        <FontAwesomeIcon
+          icon={faFileMedical}
+          size="2x"
+          className={`${url}/patients` ? styles.activeIcon : styles.plusIcon}
+        />
+      ),
     },
     {
       name: "Reports",
       url: `${url}/reports`,
-      icon: faChartBar,
+      Icon: (
+        <FontAwesomeIcon
+          icon={faChartBar}
+          size="2x"
+          className={`${url}/reports` ? styles.activeIcon : styles.plusIcon}
+        />
+      ),
     },
     {
       name: "Roles",
-      url: `${url}/Staff/doctors`,
-      icon: faStethoscope,
+      url: `${url}/stuff/doctors`,
+      Icon: (
+        <FontAwesomeIcon
+          icon={faStethoscope}
+          size="2x"
+          className={
+            `${url}/stuff/doctors` ? styles.activeIcon : styles.plusIcon
+          }
+        />
+      ),
     },
     {
       name: "Status",
       url: `${url}/alerts`,
-      icon: faBell,
+      Icon: (
+        <FontAwesomeIcon
+          icon={faBell}
+          size="2x"
+          className={`${url}/alerts` ? styles.activeIcon : styles.plusIcon}
+        />
+      ),
     },
     {
       name: "Resources",
       url: `${url}/sequence`,
-      icon: faWaveSquare,
+      Icon: (
+        <FontAwesomeIcon
+          icon={faWaveSquare}
+          size="2x"
+          className={`${url}/sequence` ? styles.activeIcon : styles.plusIcon}
+        />
+      ),
     },
   ];
 
@@ -146,7 +188,7 @@ function ControlPanel({ window }) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        <div className={styles.sideBar} style={{ width: drawerWidth }}>
+        <div style={{ width: drawerWidth }} className={styles.sideBar}>
           <div className={styles.logo}>
             <img src={Logo} alt="Logo" />
             <h1>
@@ -156,25 +198,96 @@ function ControlPanel({ window }) {
           <div className={styles.nav}>
             <ul className={styles.navList}>
               {navList.map((item) => (
-                <li key={item.name} onClick={onCLickToggle}>
+                <li onClick={() => onCLickToggle()}>
                   <Link
                     to={item.url}
                     className={
                       matchPath(location.pathname, {
-                        path: item.url,
+                        path: `${item.url}`,
                         exact: true,
                       }) && styles.active
                     }
                   >
-                    <FontAwesomeIcon
-                      icon={item.icon}
-                      size="1x"
-                      className={styles.plusIcon}
-                    />
+                    <span>{item.Icon}</span>
                     <span className={styles.navText}>{item.name}</span>
                   </Link>
                 </li>
               ))}
+
+              {/* {url.includes("admin") && (
+                <li onClick={() => onCLickToggle()}>
+                  <Link to={`${url}/stuff/doctors`}>
+                    <span>
+                      <FontAwesomeIcon
+                        className={styles.plusIcon}
+                        icon={faStethoscope}
+                        size="2x"
+                      />
+                    </span>{" "}
+                    Roles
+                  </Link>
+                </li>
+              )} */}
+              {/* {url.includes("admin") && (
+                <li onClick={() => onCLickToggle()}>
+                  <Link to={`${url}/alerts`}>
+                    <span>
+                      <FontAwesomeIcon
+                        className={styles.plusIcon}
+                        icon={faBell}
+                        size="2x"
+                      />
+                    </span>{" "}
+                    Alerts
+                  </Link>
+                </li>
+              )} */}
+              {/* {url.includes("admin") && (
+                <li onClick={() => onCLickToggle()}>
+                  <Link to={`${url}/sequence`}>
+                    <span>
+                      <FontAwesomeIcon
+                        className={styles.plusIcon}
+                        icon={faWaveSquare}
+                        size="2x"
+                      />
+                    </span>{" "}
+                    Resources
+                  </Link>
+                </li>
+              )} */}
+              {/* {url.includes("admin") && (
+                <li
+                  style={{ paddingLeft: "5px" }}
+                  onClick={() => onCLickToggle()}
+                >
+                  <Link
+                    to={`${url}/patients`}
+                    className={
+                      matchPath(location.pathname, {
+                        path: `${url}/patients`,
+                        exact: true,
+                      }) && styles.active
+                    }
+                  >
+                    <span>
+                      <FontAwesomeIcon
+                        className={
+                          matchPath(location.pathname, {
+                            path: `${url}/patients`,
+                            exact: true,
+                          })
+                            ? styles.activeIcon
+                            : styles.plusIcon
+                        }
+                        icon={faFileMedical}
+                        size="2x"
+                      />
+                    </span>{" "}
+                    Patients
+                  </Link>
+                </li>
+              )} */}
             </ul>
           </div>
           <div className={styles.signOutBtn}>
@@ -208,6 +321,7 @@ function ControlPanel({ window }) {
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
             container={container}
@@ -219,7 +333,7 @@ function ControlPanel({ window }) {
               paper: classes.drawerPaper,
             }}
             ModalProps={{
-              keepMounted: true,
+              keepMounted: true, // Better open performance on mobile.
             }}
           >
             {drawer}
@@ -237,26 +351,56 @@ function ControlPanel({ window }) {
           </Drawer>
         </Hidden>
       </nav>
+      {/* style={{ overflowX: 'hidden' }} */}
       <main className={classes.content}>
         <div className={styles.main}>
           <Switch>
-            <Route path={`${path}/dashboard`} component={Dashboard} />
-            <Route
-              path={`${path}/assistant-dashboard`}
-              component={AssistantDashboard}
-            />
-            <Route path={`${path}/Staff`} component={Staff} />
-            <Route path={`${path}/alerts`} component={Alerts} />
-            <Route path={`${path}/sequence`} component={Sequence} />
-            <Route path={`${path}/patients`} exact component={Patients} />
-            <Route
-              path={`${path}/patients/:date`}
-              exact
-              component={PatientInfo}
-            />
-            <Route path={`${path}/doctors`} component={Doctors} />
-            <Route path={`${path}/self-sequence`} component={DoctorsSelf} />
-            <Route path={`${path}/reports`} component={Reports} />
+            <Route path={`${path}/dashboard`}>
+              <Dashboard />
+            </Route>
+          </Switch>
+          <Switch>
+            <Route path={`${path}/assistant-dashboard`}>
+              <AssistantDashboard />
+            </Route>
+          </Switch>
+          <Switch>
+            <Route path={`${path}/stuff`}>
+              <Stuff />
+            </Route>
+          </Switch>
+          <Switch>
+            <Route path={`${path}/alerts`}>
+              <Alerts />
+            </Route>
+          </Switch>
+          <Switch>
+            <Route path={`${path}/sequence`}>
+              <Sequence drList={drList} />
+            </Route>
+          </Switch>
+          <Switch>
+            <Route path={`${path}/patients`} exact>
+              <Patients />
+            </Route>
+          </Switch>
+          <Switch>
+            <Route path={`${path}/patients/:date`} exact>
+              <PatientInfo />
+            </Route>
+          </Switch>
+          <Switch>
+            <Route path={`${path}/doctors`}>
+              <Doctors />
+            </Route>
+          </Switch>
+          <Switch>
+            <Route path={`${path}/self-sequence`}>
+              <DoctorsSelf />
+            </Route>
+            <Route path={`${path}/reports`}>
+              <Reports />
+            </Route>
           </Switch>
         </div>
       </main>

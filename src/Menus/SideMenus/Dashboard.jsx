@@ -1,14 +1,14 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { CardDeck, Col, Container, Row } from "react-bootstrap";
-import toast from "react-hot-toast";
-import { addDashData, countUpdate } from "../../API/Api";
-import { db } from "../../API/firebase";
-import { GlobalContext, ModalContext } from "../../App";
-import ResetBtn from "../../Components/Buttons/ResetBtn/ResetBtn";
-import StopBtn from "../../Components/Buttons/StopBtn/StopBtn";
-import DashCard from "../../Components/Cards/DashCard/DashCard";
-import App from "../../Modals/ModalComponent/App";
-import styles from "./Dashboard.module.css";
+import React, { useContext, useEffect, useState } from 'react';
+import { CardDeck, Col, Container, Row } from 'react-bootstrap';
+import toast from 'react-hot-toast';
+import { addDashData, countUpdate } from '../../API/Api';
+import { db } from '../../API/firebase';
+import { GlobalContext, ModalContext } from '../../App';
+import ResetBtn from '../../Components/Buttons/ResetBtn/ResetBtn';
+import StopBtn from '../../Components/Buttons/StopBtn/StopBtn';
+import DashCard from '../../Components/Cards/DashCard/DashCard';
+import App from '../../Modals/ModalComponent/App';
+import styles from './Dashboard.module.css';
 
 const Dashboard = () => {
   const [mod, setMod] = useContext(ModalContext);
@@ -16,32 +16,27 @@ const Dashboard = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = db
-      .collection("dashboard")
-      .onSnapshot((querySnapshot) => {
-        const drList = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setData(drList);
-      });
-
-    return () => unsubscribe(); // Unsubscribe from the snapshot listener on unmount
+    const citiesRef = db.collection('dashboard');
+    citiesRef.onSnapshot((querySnapshot) => {
+      const drList = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setData(drList);
+    });
   }, []);
 
-  const onOpenModal = useCallback(
-    () => setMod({ onOpenModal: true }),
-    [setMod]
-  );
+  const onOpenModal = () => setMod({ onOpenModal: true });
 
-  const reset = useCallback((doc) => {
+  const reset = (doc) => {
     const emptyRooms = doc.rooms.map((room) => ({
-      ...room,
-      alert: "",
-      bg: "",
-      border: "",
+      alert: '',
+      bg: '',
+      border: '',
+      id: room.id,
+      name: room.id,
       blink: false,
-      activityType: "",
+      activityType: '',
     }));
 
     addDashData({
@@ -54,16 +49,16 @@ const Dashboard = () => {
       },
       rooms: emptyRooms,
     });
-  }, []);
+  };
 
-  const countUp = useCallback((doc) => {
+  const countUp = (doc) => {
     countUpdate({
       id: doc.id,
       value: doc.count.length + 1,
     });
-  }, []);
+  };
 
-  const countDown = useCallback((doc) => {
+  const countDown = (doc) => {
     if (doc.count.length === 0) {
       toast.error("Patients can't be less than zero");
     } else {
@@ -72,7 +67,7 @@ const Dashboard = () => {
         value: doc.count.length - 1,
       });
     }
-  }, []);
+  };
 
   return (
     <Container fluid id={styles.dashboard}>
@@ -88,39 +83,39 @@ const Dashboard = () => {
                 <p>{doc.role}</p>
               </div>
               <div className={styles.drAreaBottom}>
-                <StopBtn handleClick={() => countUp(doc)} sign="Add" />
+                <StopBtn handleClick={() => countUp(doc)} sign='Add' />
                 <p
                   style={{
-                    color: "#FC7E55",
-                    fontWeight: "bold",
-                    fontSize: "30px",
-                    margin: "-9px 10px 10px 10px",
-                  }}
-                >
+                    color: '#FC7E55',
+                    fontWeight: 'bold',
+                    fontSize: '30px',
+                    margin: '-9px 10px 10px 10px',
+                  }}>
                   {doc?.count?.length}
                 </p>
-                <StopBtn handleClick={() => countDown(doc)} sign="Remove" />
+                <StopBtn handleClick={() => countDown(doc)} sign='Remove' />
               </div>
             </div>
           </Col>
           <Col md={9} sm={8} className={styles.dropBoxParent}>
             <CardDeck id={styles.DropBox}>
-              {doc.rooms?.map((room, idx) => (
+              {doc.rooms?.map((room, index) => (
                 <DashCard
-                  key={room.id}
                   handler={() =>
                     updateGlobalData({
                       ...globalData,
                       count: doc.count,
-                      arrIndex: idx,
+                      arrIndex: index,
                       docId: doc.id,
                     })
                   }
                   docId={doc.id}
-                  idx={idx}
+                  key={room.id}
+                  idx={index}
                   room={room}
                   data={doc}
                   openAlertModal={onOpenModal}
+                  doc={doc}
                   waiting={doc.count}
                   countDown={() => countDown(doc)}
                 />
