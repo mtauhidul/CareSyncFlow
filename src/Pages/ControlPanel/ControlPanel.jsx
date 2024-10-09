@@ -1,8 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable react/require-default-props */
-/* eslint-disable import/no-cycle */
 import {
   faBell,
   faChartBar,
@@ -26,10 +21,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 import React, { useState } from "react";
 import {
   Link,
+  matchPath,
   Route,
   Switch,
-  matchPath,
   useHistory,
+  useLocation,
   useRouteMatch,
 } from "react-router-dom";
 import useViewportSizes from "use-viewport-sizes";
@@ -60,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
       flexShrink: 0,
     },
   },
-
   appBar: {
     [theme.breakpoints.up("sm")]: {
       width: `calc(100% - ${drawerWidth}px)`,
@@ -73,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
-  // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
@@ -84,17 +78,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ControlPanel(props) {
-  const [vpWidth, vpHeight] = useViewportSizes();
+function ControlPanel({ window }) {
+  const [vpWidth] = useViewportSizes();
   const { path, url } = useRouteMatch();
+  const location = useLocation(); // Get location using useLocation hook
   const history = useHistory();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const [drList, setDrList] = useState([]);
-
-  const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -109,77 +101,38 @@ function ControlPanel(props) {
   const logOut = () => {
     sessionStorage.clear();
     history.push("/");
-    // location.reload();
   };
 
   const navList = [
     {
       name: "Dashboard",
       url: `${url}/dashboard`,
-      Icon: (
-        <FontAwesomeIcon
-          icon={faColumns}
-          size="2x"
-          className={`${url}/dashboard` ? styles.activeIcon : styles.plusIcon}
-        />
-      ),
+      icon: faColumns,
     },
     {
       name: "Patients",
       url: `${url}/patients`,
-      Icon: (
-        <FontAwesomeIcon
-          icon={faFileMedical}
-          size="2x"
-          className={`${url}/patients` ? styles.activeIcon : styles.plusIcon}
-        />
-      ),
+      icon: faFileMedical,
     },
     {
       name: "Reports",
       url: `${url}/reports`,
-      Icon: (
-        <FontAwesomeIcon
-          icon={faChartBar}
-          size="2x"
-          className={`${url}/reports` ? styles.activeIcon : styles.plusIcon}
-        />
-      ),
+      icon: faChartBar,
     },
     {
       name: "Roles",
       url: `${url}/stuff/doctors`,
-      Icon: (
-        <FontAwesomeIcon
-          icon={faStethoscope}
-          size="2x"
-          className={
-            `${url}/stuff/doctors` ? styles.activeIcon : styles.plusIcon
-          }
-        />
-      ),
+      icon: faStethoscope,
     },
     {
       name: "Status",
       url: `${url}/alerts`,
-      Icon: (
-        <FontAwesomeIcon
-          icon={faBell}
-          size="2x"
-          className={`${url}/alerts` ? styles.activeIcon : styles.plusIcon}
-        />
-      ),
+      icon: faBell,
     },
     {
       name: "Resources",
       url: `${url}/sequence`,
-      Icon: (
-        <FontAwesomeIcon
-          icon={faWaveSquare}
-          size="2x"
-          className={`${url}/sequence` ? styles.activeIcon : styles.plusIcon}
-        />
-      ),
+      icon: faWaveSquare,
     },
   ];
 
@@ -188,7 +141,7 @@ function ControlPanel(props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        <div style={{ width: drawerWidth }} className={styles.sideBar}>
+        <div className={styles.sideBar} style={{ width: drawerWidth }}>
           <div className={styles.logo}>
             <img src={Logo} alt="Logo" />
             <h1>
@@ -198,96 +151,26 @@ function ControlPanel(props) {
           <div className={styles.nav}>
             <ul className={styles.navList}>
               {navList.map((item) => (
-                <li onClick={() => onCLickToggle()}>
+                <li key={item.name} onClick={onCLickToggle}>
                   <Link
                     to={item.url}
                     className={
                       matchPath(location.pathname, {
-                        path: `${item.url}`,
+                        path: item.url,
                         exact: true,
                       }) && styles.active
                     }
                   >
-                    <span>{item.Icon}</span>
+                    <FontAwesomeIcon
+                      icon={item.icon}
+                      size="1x"
+                      className={styles.plusIcon}
+                    />
+
                     <span className={styles.navText}>{item.name}</span>
                   </Link>
                 </li>
               ))}
-
-              {/* {url.includes("admin") && (
-                <li onClick={() => onCLickToggle()}>
-                  <Link to={`${url}/stuff/doctors`}>
-                    <span>
-                      <FontAwesomeIcon
-                        className={styles.plusIcon}
-                        icon={faStethoscope}
-                        size="2x"
-                      />
-                    </span>{" "}
-                    Roles
-                  </Link>
-                </li>
-              )} */}
-              {/* {url.includes("admin") && (
-                <li onClick={() => onCLickToggle()}>
-                  <Link to={`${url}/alerts`}>
-                    <span>
-                      <FontAwesomeIcon
-                        className={styles.plusIcon}
-                        icon={faBell}
-                        size="2x"
-                      />
-                    </span>{" "}
-                    Alerts
-                  </Link>
-                </li>
-              )} */}
-              {/* {url.includes("admin") && (
-                <li onClick={() => onCLickToggle()}>
-                  <Link to={`${url}/sequence`}>
-                    <span>
-                      <FontAwesomeIcon
-                        className={styles.plusIcon}
-                        icon={faWaveSquare}
-                        size="2x"
-                      />
-                    </span>{" "}
-                    Resources
-                  </Link>
-                </li>
-              )} */}
-              {/* {url.includes("admin") && (
-                <li
-                  style={{ paddingLeft: "5px" }}
-                  onClick={() => onCLickToggle()}
-                >
-                  <Link
-                    to={`${url}/patients`}
-                    className={
-                      matchPath(location.pathname, {
-                        path: `${url}/patients`,
-                        exact: true,
-                      }) && styles.active
-                    }
-                  >
-                    <span>
-                      <FontAwesomeIcon
-                        className={
-                          matchPath(location.pathname, {
-                            path: `${url}/patients`,
-                            exact: true,
-                          })
-                            ? styles.activeIcon
-                            : styles.plusIcon
-                        }
-                        icon={faFileMedical}
-                        size="2x"
-                      />
-                    </span>{" "}
-                    Patients
-                  </Link>
-                </li>
-              )} */}
             </ul>
           </div>
           <div className={styles.signOutBtn}>
@@ -321,7 +204,6 @@ function ControlPanel(props) {
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
             container={container}
@@ -333,7 +215,7 @@ function ControlPanel(props) {
               paper: classes.drawerPaper,
             }}
             ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
+              keepMounted: true,
             }}
           >
             {drawer}
@@ -351,50 +233,33 @@ function ControlPanel(props) {
           </Drawer>
         </Hidden>
       </nav>
-      {/* style={{ overflowX: 'hidden' }} */}
       <main className={classes.content}>
         <div className={styles.main}>
           <Switch>
             <Route path={`${path}/dashboard`}>
               <Dashboard />
             </Route>
-          </Switch>
-          <Switch>
             <Route path={`${path}/assistant-dashboard`}>
               <AssistantDashboard />
             </Route>
-          </Switch>
-          <Switch>
             <Route path={`${path}/stuff`}>
               <Stuff />
             </Route>
-          </Switch>
-          <Switch>
             <Route path={`${path}/alerts`}>
               <Alerts />
             </Route>
-          </Switch>
-          <Switch>
             <Route path={`${path}/sequence`}>
-              <Sequence drList={drList} />
+              <Sequence />
             </Route>
-          </Switch>
-          <Switch>
             <Route path={`${path}/patients`} exact>
               <Patients />
             </Route>
-          </Switch>
-          <Switch>
             <Route path={`${path}/patients/:date`} exact>
               <PatientInfo />
             </Route>
-          </Switch>
-          <Switch>
             <Route path={`${path}/doctors`}>
               <Doctors />
             </Route>
-          </Switch>
-          <Switch>
             <Route path={`${path}/self-sequence`}>
               <DoctorsSelf />
             </Route>

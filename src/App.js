@@ -6,15 +6,17 @@ import PatientsInformationProvider from "./context/PatientsInformationContext";
 import ErrorFallback from "./ErrorFallback";
 import MainRouter from "./MainRouter";
 
+// Create Contexts
 export const ApiContext = createContext();
 export const GlobalContext = createContext();
 export const DataContext = createContext();
 export const ModalContext = createContext();
 export const UserContext = createContext();
 export const AuthContext = createContext();
-export const patientsContext = createContext();
+export const PatientsContext = createContext();
 
 const App = () => {
+  // State management for different contexts
   const [patients, setPatients] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState({});
   const [globalData, updateGlobalData] = useState({});
@@ -26,57 +28,46 @@ const App = () => {
   const [info, setInfo] = useState({});
   const [mod, setMod] = useState({});
   const [header, setHeader] = useState([
-    {
-      name: "",
-      email: "",
-      phone: "",
-    },
-    {
-      bg: "",
-      border: "",
-    },
-    {
-      id: "",
-    },
-    {
-      type: "",
-      collection: "",
-      document: "",
-      method: "",
-    },
-    {
-      modal: "",
-    },
+    { name: "", email: "", phone: "" },
+    { bg: "", border: "" },
+    { id: "" },
+    { type: "", collection: "", document: "", method: "" },
+    { modal: "" },
   ]);
+
+  // Create a combined context provider for better organization and readability
+  const CombinedContextProvider = ({ children }) => (
+    <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>
+      <ApiContext.Provider value={[header, setHeader]}>
+        <GlobalContext.Provider value={[globalData, updateGlobalData]}>
+          <DataContext.Provider value={[info, setInfo]}>
+            <ModalContext.Provider value={[mod, setMod]}>
+              <AuthContext.Provider value={[auth, setAuth]}>
+                <PatientsContext.Provider value={[patients, setPatients]}>
+                  {children}
+                </PatientsContext.Provider>
+              </AuthContext.Provider>
+            </ModalContext.Provider>
+          </DataContext.Provider>
+        </GlobalContext.Provider>
+      </ApiContext.Provider>
+    </UserContext.Provider>
+  );
 
   return (
     <>
-      <div>
-        <Toaster />
-      </div>
+      <Toaster />
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onReset={() => {
-          document.location.reload(true);
+          console.log("Resetting application state after error...");
         }}
       >
-        <UserContext.Provider value={[loggedInUser, setLoggedInUser]}>
-          <ApiContext.Provider value={[header, setHeader]}>
-            <GlobalContext.Provider value={[globalData, updateGlobalData]}>
-              <DataContext.Provider value={[info, setInfo]}>
-                <ModalContext.Provider value={[mod, setMod]}>
-                  <AuthContext.Provider value={[auth, setAuth]}>
-                    <patientsContext.Provider value={[patients, setPatients]}>
-                      <PatientsInformationProvider>
-                        <MainRouter />
-                      </PatientsInformationProvider>
-                    </patientsContext.Provider>
-                  </AuthContext.Provider>
-                </ModalContext.Provider>
-              </DataContext.Provider>
-            </GlobalContext.Provider>
-          </ApiContext.Provider>
-        </UserContext.Provider>
+        <PatientsInformationProvider>
+          <CombinedContextProvider>
+            <MainRouter />
+          </CombinedContextProvider>
+        </PatientsInformationProvider>
       </ErrorBoundary>
     </>
   );
