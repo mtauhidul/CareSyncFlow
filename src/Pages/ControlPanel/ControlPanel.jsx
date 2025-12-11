@@ -5,9 +5,7 @@
 /* eslint-disable import/no-cycle */
 import {
   faBell,
-  faChartBar,
   faColumns,
-  faFileMedical,
   faStethoscope,
   faWaveSquare,
 } from "@fortawesome/free-solid-svg-icons";
@@ -33,8 +31,6 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import useViewportSizes from "use-viewport-sizes";
-import Logo from "../../Assets/workflow.png";
-import ModeSwitch from "../../Components/Buttons/ModeSwitch/ModeSwitch";
 import SignOutBtn from "../../Components/Buttons/SignOutBtn/SignOutBtn";
 import Alerts from "../../Menus/SideMenus/Alerts";
 import AssistantDashboard from "../../Menus/SideMenus/AssistantDashboard";
@@ -125,28 +121,6 @@ function ControlPanel(props) {
       ),
     },
     {
-      name: "Patients",
-      url: `${url}/patients`,
-      Icon: (
-        <FontAwesomeIcon
-          icon={faFileMedical}
-          size="2x"
-          className={`${url}/patients` ? styles.activeIcon : styles.plusIcon}
-        />
-      ),
-    },
-    {
-      name: "Reports",
-      url: `${url}/reports`,
-      Icon: (
-        <FontAwesomeIcon
-          icon={faChartBar}
-          size="2x"
-          className={`${url}/reports` ? styles.activeIcon : styles.plusIcon}
-        />
-      ),
-    },
-    {
       name: "Roles",
       url: `${url}/stuff/doctors`,
       Icon: (
@@ -190,7 +164,6 @@ function ControlPanel(props) {
       <List>
         <div style={{ width: drawerWidth }} className={styles.sideBar}>
           <div className={styles.logo}>
-            <img src={Logo} alt="Logo" />
             <h1>
               Care Sync <span>Flow</span>
             </h1>
@@ -291,7 +264,6 @@ function ControlPanel(props) {
             </ul>
           </div>
           <div className={styles.signOutBtn}>
-            <ModeSwitch />
             <SignOutBtn handleClick={logOut} />
           </div>
         </div>

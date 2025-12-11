@@ -1,108 +1,296 @@
 .ReceptionistLoginContainer {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  width: 100%;
   height: 100vh;
-  background: var(--color14);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-.ReceptionistLoginWrapper {
-  max-width: 480px;
-  height: auto;
-  background: var(--color5);
-  padding: 50px 60px;
+.backgroundGradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color4) 0%, #1a1a5a 50%, var(--color17) 100%);
+  z-index: 0;
+}
+
+.glowEffect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(106, 199, 190, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 1;
+  animation: pulseGlow 8s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+.floatingShapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.shape1,
+.shape2 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.15;
+  animation: float 15s ease-in-out infinite;
+}
+
+.shape1 {
+  width: 200px;
+  height: 200px;
+  background: var(--color1);
+  top: 15%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.shape2 {
+  width: 180px;
+  height: 180px;
+  background: var(--color22);
+  bottom: 20%;
+  right: 10%;
+  animation-delay: 5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(20px, -20px) rotate(180deg);
+  }
 }
 
 .ReceptionistLoginWrapper {
   position: relative;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
-    0 0 40px rgba(0, 0, 0, 0.1) inset;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
-    0 0 40px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  z-index: 10;
+  max-width: 480px;
+  width: 100%;
+  background: rgba(246, 246, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(246, 246, 255, 0.1);
+  border-radius: 16px;
+  padding: 50px 45px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.ReceptionistLoginWrapper:before,
-.ReceptionistLoginWrapper:after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-  -moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-  top: 10px;
-  bottom: 10px;
-  left: 0;
-  right: 0;
-  -moz-border-radius: 100px / 10px;
-  border-radius: 100px / 10px;
+.loginHeader {
+  text-align: center;
+  margin-bottom: 35px;
 }
 
-.ReceptionistLoginWrapper:after {
-  right: 10px;
-  left: auto;
-  -webkit-transform: skew(8deg) rotate(3deg);
-  -moz-transform: skew(8deg) rotate(3deg);
-  -ms-transform: skew(8deg) rotate(3deg);
-  -o-transform: skew(8deg) rotate(3deg);
-  transform: skew(8deg) rotate(3deg);
+.loginHeader h1 {
+  color: var(--color3);
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  font-family: Poppins;
 }
 
-.ReceptionistLoginWrapper input {
-  width: 320px;
-  height: 44px;
-  font-size: 20px;
-  font: 700;
-  margin: 15px auto;
-  border: 1px solid var(--color3);
-  border-radius: 2px;
-  padding-left: 10px;
+.loginHeader p {
+  color: rgba(246, 246, 255, 0.7);
+  font-size: 0.9rem;
+  margin: 0;
+  font-family: Poppins;
 }
 
-.ReceptionistLoginWrapper input[type="submit"] {
-  cursor: pointer;
-  width: 332px;
+.inputGroup {
+  margin-bottom: 24px;
 }
 
-.ReceptionistLoginWrapper input:hover,
-.ReceptionistLoginWrapper input:focus {
-  background-color: #ccc;
+.inputGroup label {
+  display: block;
+  color: var(--color3);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-family: Poppins;
+}
+
+.inputGroup input {
+  width: 100%;
+  height: 50px;
+  background: rgba(246, 246, 255, 0.08);
+  border: 1px solid rgba(246, 246, 255, 0.2);
+  border-radius: 10px;
+  padding: 0 18px;
+  font-size: 15px;
+  color: var(--color3);
+  font-family: Poppins;
+  transition: all 0.3s ease;
+}
+
+.inputGroup input::placeholder {
+  color: rgba(246, 246, 255, 0.4);
+}
+
+.inputGroup input:focus {
   outline: none;
+  background: rgba(246, 246, 255, 0.12);
+  border-color: var(--color1);
+  box-shadow: 0 0 0 3px rgba(106, 199, 190, 0.1);
 }
 
-/* media query for responsive */
-@media screen and (max-width: 520px) {
+.submitSection {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.submitBtn {
+  width: 100%;
+  height: 52px;
+  background: var(--color1);
+  color: var(--color2);
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: Poppins;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(106, 199, 190, 0.3);
+}
+
+.submitBtn:hover {
+  background: var(--color25);
+  border: 2px solid var(--color1);
+  color: var(--color4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(106, 199, 190, 0.4);
+}
+
+.submitBtn:active {
+  transform: translateY(0);
+}
+
+.exitBtn {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 25px;
+  padding: 12px 28px;
+  background: rgba(246, 246, 255, 0.08);
+  border: 1px solid rgba(246, 246, 255, 0.2);
+  border-radius: 10px;
+  color: var(--color3);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: Poppins;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.exitBtn:hover {
+  background: rgba(246, 246, 255, 0.12);
+  border-color: var(--color1);
+  color: var(--color1);
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.plusIcon {
+  font-size: 16px;
+}
+
+@media screen and (max-width: 580px) {
   .ReceptionistLoginWrapper {
-    max-width: 420px;
-    padding: 40px 40px;
+    padding: 40px 35px;
+  }
+
+  .loginHeader h1 {
+    font-size: 1.75rem;
+  }
+
+  .loginHeader p {
+    font-size: 0.85rem;
+  }
+
+  .inputGroup input {
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .submitBtn {
+    height: 50px;
+    font-size: 15px;
   }
 }
 
 @media screen and (max-width: 440px) {
   .ReceptionistLoginWrapper {
-    max-width: 378px;
-    padding: 30px 20px;
+    padding: 35px 30px;
+  }
+
+  .loginHeader h1 {
+    font-size: 1.6rem;
+  }
+
+  .inputGroup {
+    margin-bottom: 20px;
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 380px) {
   .ReceptionistLoginWrapper {
-    max-width: 320px;
-    padding: 20px 20px;
-  }
-  .ReceptionistLoginWrapper input {
-    width: 100%;
+    padding: 30px 25px;
   }
 
-  .ReceptionistLoginWrapper input[type="submit"] {
-    width: 100%;
+  .loginHeader h1 {
+    font-size: 1.5rem;
   }
-}
 
-@media screen and (max-width: 324px) {
-  .ReceptionistLoginWrapper {
-    max-width: 300px;
-    padding: 10px 10px;
+  .loginHeader {
+    margin-bottom: 30px;
+  }
+
+  .inputGroup input {
+    height: 46px;
+  }
+
+  .submitBtn {
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .exitBtn {
+    padding: 10px 24px;
+    font-size: 14px;
   }
 }

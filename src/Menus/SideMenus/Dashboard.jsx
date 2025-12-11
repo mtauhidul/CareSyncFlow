@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { CardDeck, Col, Container, Row } from 'react-bootstrap';
-import toast from 'react-hot-toast';
-import { addDashData, countUpdate } from '../../API/Api';
-import { db } from '../../API/firebase';
-import { GlobalContext, ModalContext } from '../../App';
-import ResetBtn from '../../Components/Buttons/ResetBtn/ResetBtn';
-import StopBtn from '../../Components/Buttons/StopBtn/StopBtn';
-import DashCard from '../../Components/Cards/DashCard/DashCard';
-import App from '../../Modals/ModalComponent/App';
-import styles from './Dashboard.module.css';
+import { useContext, useEffect, useState } from "react";
+import { CardDeck, Col, Container, Row } from "react-bootstrap";
+import toast from "react-hot-toast";
+import { addDashData, countUpdate } from "../../API/Api";
+import { db } from "../../API/firebase";
+import { GlobalContext, ModalContext } from "../../App";
+import ResetBtn from "../../Components/Buttons/ResetBtn/ResetBtn";
+import StopBtn from "../../Components/Buttons/StopBtn/StopBtn";
+import DashCard from "../../Components/Cards/DashCard/DashCard";
+import App from "../../Modals/ModalComponent/App";
+import styles from "./Dashboard.module.css";
 
 const Dashboard = () => {
   const [mod, setMod] = useContext(ModalContext);
@@ -16,7 +16,7 @@ const Dashboard = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const citiesRef = db.collection('dashboard');
+    const citiesRef = db.collection("dashboard");
     citiesRef.onSnapshot((querySnapshot) => {
       const drList = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
@@ -30,13 +30,13 @@ const Dashboard = () => {
 
   const reset = (doc) => {
     const emptyRooms = doc.rooms.map((room) => ({
-      alert: '',
-      bg: '',
-      border: '',
+      alert: "",
+      bg: "",
+      border: "",
       id: room.id,
       name: room.id,
       blink: false,
-      activityType: '',
+      activityType: "",
     }));
 
     addDashData({
@@ -46,6 +46,8 @@ const Dashboard = () => {
         phone: doc.phone,
         count: doc.count,
         id: doc.id,
+        role: doc.role,
+        waiting: doc.waiting,
       },
       rooms: emptyRooms,
     });
@@ -83,17 +85,18 @@ const Dashboard = () => {
                 <p>{doc.role}</p>
               </div>
               <div className={styles.drAreaBottom}>
-                <StopBtn handleClick={() => countUp(doc)} sign='Add' />
+                <StopBtn handleClick={() => countUp(doc)} sign="Add" />
                 <p
                   style={{
-                    color: '#FC7E55',
-                    fontWeight: 'bold',
-                    fontSize: '30px',
-                    margin: '-9px 10px 10px 10px',
-                  }}>
+                    color: "#FC7E55",
+                    fontWeight: "bold",
+                    fontSize: "30px",
+                    margin: "-9px 10px 10px 10px",
+                  }}
+                >
                   {doc?.count?.length}
                 </p>
-                <StopBtn handleClick={() => countDown(doc)} sign='Remove' />
+                <StopBtn handleClick={() => countDown(doc)} sign="Remove" />
               </div>
             </div>
           </Col>

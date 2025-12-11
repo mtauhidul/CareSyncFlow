@@ -19,10 +19,6 @@ const AdminLogin = () => {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext);
   const [auth, setAuth] = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  // console.log(
-  //   '🚀 ~ file: AdminLogin.jsx ~ line 21 ~ AdminLogin ~ loading',
-  //   loading
-  // );
 
   const {
     register,
@@ -40,11 +36,10 @@ const AdminLogin = () => {
 
   historyCheck();
 
-  // console.log(auth);
-
   const pageRedirect = () => {
     history.push(`${auth.address}`);
   };
+
   const onSubmit = (data) => {
     setLoading(true);
 
@@ -88,43 +83,56 @@ const AdminLogin = () => {
 
     queryData();
   };
+
   return (
     <Container fluid className={styles.AdminLoginContainer}>
-      <div className={styles.AdminLoginWrapper}>
-        <h1>
-          <span>{auth.provider}</span> Login
-        </h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input
-            type='text'
-            placeholder='Email'
-            {...register('email', { required: true })}
-          />
-          {auth.provider === 'Admin' ? (
-            <input
-              type='password'
-              placeholder='Password'
-              {...register('password', { required: true })}
-            />
-          ) : null}
+      <div className={styles.backgroundGradient}></div>
+      <div className={styles.glowEffect}></div>
+      <div className={styles.floatingShapes}>
+        <div className={styles.shape1}></div>
+        <div className={styles.shape2}></div>
+      </div>
 
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'column',
-            }}>
+      <div className={styles.AdminLoginWrapper}>
+        <div className={styles.loginHeader}>
+          <h1>
+            <span>{auth.provider}</span> Login
+          </h1>
+          <p>Enter your credentials to access your dashboard</p>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.inputGroup}>
+            <label>Email Address</label>
+            <input
+              type='text'
+              placeholder='Enter your email'
+              {...register('email', { required: true })}
+            />
+          </div>
+
+          {auth.provider === 'Admin' && (
+            <div className={styles.inputGroup}>
+              <label>Password</label>
+              <input
+                type='password'
+                placeholder='Enter your password'
+                {...register('password', { required: true })}
+              />
+            </div>
+          )}
+
+          <div className={styles.submitSection}>
             {loading && (
-              <div
-                style={{
-                  height: '75px',
-                }}>
+              <div className={styles.loadingWrapper}>
                 <CircularProgress />
               </div>
             )}
             <input
               type='submit'
+              value='Sign In'
               disabled={loading}
+              className={styles.submitBtn}
               style={{
                 cursor: loading ? 'not-allowed' : 'pointer',
                 display: loading ? 'none' : 'block',
@@ -133,13 +141,14 @@ const AdminLogin = () => {
           </div>
         </form>
       </div>
+
       <Link to='/' className={styles.exitBtn} type='button'>
         <FontAwesomeIcon
           className={styles.plusIcon}
           icon={faArrowAltCircleLeft}
           size='1x'
-        />{' '}
-        EXIT
+        />
+        Back to Home
       </Link>
     </Container>
   );
