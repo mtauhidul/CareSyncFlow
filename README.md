@@ -1,45 +1,33 @@
-# 🏥 Care Sync Flow
+# Care Sync Flow
 
-A friendly, real-time hospital workflow app that keeps every team member in sync — so you can focus on caring, not chasing paperwork.
+Real-time hospital workflow management that keeps doctors, receptionists, and assistants on the same page.
 
-## 🚀 Overview
+## What It Does
 
-Care Sync Flow is a modern hospital management system built for real-time collaboration between Doctors, Admins, Receptionists, and Assistants. From check-ins to room assignments, everything updates instantly across dashboards. Built with React and Firebase, it’s designed to make hospital workflows smooth and stress-free.
+Care Sync Flow is a web app for managing patient flow in hospitals. It lets different staff members see live updates as patients move through rooms and appointments. Built with React and Firebase for instant synchronization across all dashboards.
 
-## 🔑 Key Features
+## Features
 
-- ✅ **Role-Based Dashboards** – Everyone sees what they need, nothing more.
-- ⚡ **Real-Time Sync** – Powered by Firestore for live updates.
-- 🏥 **Room Management** – Assign rooms, reset statuses, handle emergencies.
-- 🩺 **Smart Doctor Matching** – Patients get matched to the right specialists.
-- 🖥️ **KIOSK Check-In** – Patients check in themselves, time-stamped.
-- 📊 **Reports & Analytics** – Monitor flow, workload, and usage easily.
-- 🔒 **Secure Roles & Permissions**
-- 🗂️ **Batch Upload** – Upload daily patient lists in seconds.
-- 📱 **Responsive Design** – Works great on desktop, tablet, and mobile.
+- **Role-Based Access** - Separate dashboards for Admin, Receptionist, Doctor, and Assistant
+- **Live Updates** - Real-time sync powered by Firestore
+- **Room Management** - Track patient locations and room status
+- **Status Alerts** - Emergency notifications and activity alerts
+- **Patient Tracking** - Monitor patient journey and wait times
+- **Responsive** - Works on desktop, tablet, and mobile
 
-## 🧑‍💻 Tech Stack
+## Tech Stack
 
-- **Frontend:** React, MUI, CSS Modules
-- **Backend:** Firebase Auth, Firestore
-- **Deployment:** Vercel
+- React, Material-UI, CSS Modules
+- Firebase Auth & Firestore
+- Deployed on Vercel
 
-## 📦 Try It Yourself
+## Test Credentials
 
-Test Credentials:
-Email: admin@gmail.com
+Email: admin@gmail.com  
 Password: 111111
 
-
-Live version: [caresyncflow.com](https://www.caresyncflow.com)
-
-## 📌 What's Next
-
-- 🤖 AI-based predictions for patient flow
-- 📲 Mobile companion app
-- 🔗 EHR integration support
+Live: [care-sync-flow.vercel.app](https://care-sync-flow.vercel.app/)
 
 ---
 
-Made with ❤️ by [Mir Tauhidul Islam](https://mirtauhid.com)
-
+Built by Mir Tauhidul Islam
